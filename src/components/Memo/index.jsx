@@ -1,19 +1,19 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import MemoList from '../MemoList';
 import { MEMOCONTAINER } from './styled';
 import MemoCon from '../MemoCon';
 import MemoNoCon from '../MemoNoCon';
 
 const Memo = () => {
-    const [data, setData] = useState([]);
+    const [data, setData] = useState(() => JSON.parse(localStorage.getItem('data')) || []);
     const [onData, setOnData] = useState(data[0]);
-    const no = useRef(data.length + 1);
+    const no = Math.floor(Math.random() * 9999999);
 
     const onAdd = () => {
         if (data.length >= 14) return alert('할 일은 최대 14개까지 추가 가능합니다.');
         const add = {
-            id: no.current++,
-            title: `타이틀${no.current - 1}`,
+            id: no,
+            title: `타이틀`,
             body: `내용을 입력해 주세요`,
             isDone: true,
         };
@@ -31,14 +31,18 @@ const Memo = () => {
     };
 
     const onDel = (id) => {
-        setData(
-            data
-                .map((item, idx) =>
-                    idx == 0 ? { ...item, isDone: true } : { ...item, isDone: false }
-                )
-                .filter((item) => item.id !== id)
-        );
-        setOnData(data.find((item, idx) => idx == 0));
+        if (onData.id == id) {
+            setData(
+                data
+                    .map((item, idx) =>
+                        idx == 0 ? { ...item, isDone: true } : { ...item, isDone: false }
+                    )
+                    .filter((item) => item.id !== id)
+            );
+            setOnData(data.find((_, idx) => idx == 0));
+        } else {
+            setData(data.filter((item) => item.id !== id));
+        }
     };
 
     const changeValue = (text, id) => {
@@ -46,6 +50,9 @@ const Memo = () => {
         setData(data.map((item) => (item.id == id ? { ...item, title, body } : item)));
     };
 
+    useEffect(() => {
+        localStorage.setItem('data', JSON.stringify(data));
+    }, [data]);
     return (
         <MEMOCONTAINER>
             <MemoList changeOnData={changeOnData} data={data} onDel={onDel} onAdd={onAdd} />
