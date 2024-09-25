@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import MemoList from '../MemoList';
 import { MEMOCONTAINER } from './styled';
 import MemoCon from '../MemoCon';
@@ -7,13 +7,13 @@ import MemoNoCon from '../MemoNoCon';
 const Memo = () => {
     const [data, setData] = useState(() => JSON.parse(localStorage.getItem('data')) || []);
     const [onData, setOnData] = useState(data[0]);
-    const no = Math.floor(Math.random() * 9999999);
+    const no = useRef(JSON.parse(localStorage.getItem('no')) || data.length + 1);
 
     const onAdd = () => {
         if (data.length >= 14) return alert('할 일은 최대 14개까지 추가 가능합니다.');
         const add = {
-            id: no,
-            title: `타이틀`,
+            id: no.current++,
+            title: `타이틀${no.current - 1}`,
             body: `내용을 입력해 주세요`,
             isDone: true,
         };
@@ -52,7 +52,9 @@ const Memo = () => {
 
     useEffect(() => {
         localStorage.setItem('data', JSON.stringify(data));
+        localStorage.setItem('no', JSON.stringify(no.current));
     }, [data]);
+
     return (
         <MEMOCONTAINER>
             <MemoList changeOnData={changeOnData} data={data} onDel={onDel} onAdd={onAdd} />
