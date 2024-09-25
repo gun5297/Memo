@@ -10,7 +10,8 @@ export const MEMOCONCONTAINER = styled.div`
     h3 {
     }
     input {
-        width: 100%;
+        width: 340px;
+        word-wrap: break-word;
         &:nth-child(1) {
             font-size: 30px;
             padding-bottom: 10px;

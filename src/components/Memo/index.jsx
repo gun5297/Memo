@@ -6,7 +6,7 @@ import MemoNoCon from '../MemoNoCon';
 
 const Memo = () => {
     const [data, setData] = useState(() => JSON.parse(localStorage.getItem('data')) || []);
-    const [onData, setOnData] = useState(data[0]);
+    const [onData, setOnData] = useState(JSON.parse(localStorage.getItem('onData')) || data[0]);
     const no = useRef(JSON.parse(localStorage.getItem('no')) || data.length + 1);
 
     const onAdd = () => {
@@ -52,8 +52,13 @@ const Memo = () => {
 
     useEffect(() => {
         localStorage.setItem('data', JSON.stringify(data));
+        localStorage.setItem('onData', JSON.stringify(onData));
         localStorage.setItem('no', JSON.stringify(no.current));
-    }, [data]);
+    }, [data, onData]);
+
+    useEffect(() => {
+        if (data.length <= 0) no.current = 1;
+    }, [data.length]);
 
     return (
         <MEMOCONTAINER>
