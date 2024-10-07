@@ -5,9 +5,12 @@ import MemoCon from '../MemoCon';
 import MemoNoCon from '../MemoNoCon';
 
 const Memo = () => {
-    const [data, setData] = useState(() => JSON.parse(localStorage.getItem('data')) || []);
-    const [onData, setOnData] = useState(JSON.parse(localStorage.getItem('onData')) || data[0]);
-    const no = useRef(JSON.parse(localStorage.getItem('no')) || data.length + 1);
+    const [data, setData] = useState([]);
+    // JSON.parse(localStorage.getItem('memoData')) ||
+    const [onData, setOnData] = useState(data[0]);
+    // JSON.parse(localStorage.getItem('onMemoData')) ||
+    const no = useRef(data.length + 1);
+    // localStorage.getItem('noMemo') ||
 
     const onAdd = () => {
         if (data.length >= 14) return alert('할 일은 최대 14개까지 추가 가능합니다.');
@@ -50,11 +53,11 @@ const Memo = () => {
         setData(data.map((item) => (item.id == id ? { ...item, title, body } : item)));
     };
 
-    useEffect(() => {
-        localStorage.setItem('data', JSON.stringify(data));
-        localStorage.setItem('onData', JSON.stringify(onData));
-        localStorage.setItem('no', JSON.stringify(no.current));
-    }, [data, onData]);
+    /* useEffect(() => {
+        localStorage.setItem('memoData', JSON.stringify(data));
+        localStorage.setItem('onMemoData', JSON.stringify(onData));
+        localStorage.setItem('noMemo', JSON.stringify(no.current));
+    }, [data, onData]); */
 
     useEffect(() => {
         if (data.length <= 0) no.current = 1;
